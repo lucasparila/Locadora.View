@@ -139,3 +139,8 @@ INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
 -- Pedro envolvido na Locação 2
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
 (2, 2);
+
+select * 
+from tblClientes c
+left join tblDocumentos d
+on c.ClienteID = d.ClienteID;

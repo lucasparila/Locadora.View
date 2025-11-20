@@ -7,7 +7,7 @@ namespace Locadora.Controller
     public class ClienteController
     {
 
-        public void AdicionarCliente(Cliente cliente)
+        public void AdicionarCliente(Cliente cliente, Documento documento)
         {
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
@@ -25,15 +25,22 @@ namespace Locadora.Controller
                     int clienteId = Convert.ToInt32(command.ExecuteScalar());
                     cliente.setClienteID(clienteId);
 
+                    var documentoController = new DocumentoController();
+                    documento.setClienteID(clienteId);
+                    documentoController.AdicionarDocumento(documento, connection, transaction);
+
                     transaction.Commit();
+
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao adicionar clientes" + ex.Message);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                }
-                finally
-                {
-                    connection.Close();
+                    throw new Exception("Erro inesperado ao adicionar cliente" + ex.Message);
                 }
             }
         }
@@ -60,7 +67,16 @@ namespace Locadora.Controller
                             reader["Email"].ToString(),
                             reader["Telefone"] != DBNull.Value ? reader["Telefone"].ToString() : null
                         );
-                        cliente.setClienteID(Convert.ToInt32(reader["ClienteID"]));
+                        //cliente.setClienteID(Convert.ToInt32(reader["ClienteID"]));
+
+                        var documento = new Documento(
+                            reader["TipoDocumento"].ToString(),
+                            reader["Numero"].ToString(),
+                            DateOnly.FromDateTime(reader.GetDateTime(5)),
+                            DateOnly.FromDateTime(reader.GetDateTime(6))
+                        );
+
+                        cliente.setDocumento(documento);
                         clientes.Add(cliente);
                     }
 
@@ -75,9 +91,9 @@ namespace Locadora.Controller
                 {
                     throw new Exception("Erro inesperado: " + ex.Message);
                 }
-          
+
             }
-           
+
 
         }
 
@@ -98,11 +114,20 @@ namespace Locadora.Controller
                     if (reader.Read())
                     {
                         var cliente = new Cliente(
-                           reader["Nome"].ToString(),
-                           reader["Email"].ToString(),
-                           reader["Telefone"] != DBNull.Value ? reader["Telefone"].ToString() : null
-                       );
+                            reader["Nome"].ToString(),
+                            reader["Email"].ToString(),
+                            reader["Telefone"] != DBNull.Value ? reader["Telefone"].ToString() : null
+                        );
                         cliente.setClienteID(Convert.ToInt32(reader["ClienteID"]));
+
+                        var documento = new Documento(
+                            reader["TipoDocumento"].ToString(),
+                            reader["Numero"].ToString(),
+                            DateOnly.FromDateTime(reader.GetDateTime(6)),
+                            DateOnly.FromDateTime(reader.GetDateTime(7))
+                        );
+
+                        cliente.setDocumento(documento);
                         return cliente;
                     }
                     return null;
@@ -118,7 +143,7 @@ namespace Locadora.Controller
 
             }
 
-            
+
         }
 
 
@@ -126,7 +151,7 @@ namespace Locadora.Controller
         {
 
             var clienteEncontrado = BuscaClientePorEmail(email);
-            if(clienteEncontrado is null)
+            if (clienteEncontrado is null)
             {
                 throw new Exception("Cliente não encontrado");
             }
@@ -155,8 +180,42 @@ namespace Locadora.Controller
                 }
 
             }
-           
 
+
+        }
+
+        public void AtualizarDocumentoCliente(string email, Documento documento)
+        {
+            var clienteEncontrado = BuscaClientePorEmail(email);
+            if (clienteEncontrado is null)
+            {
+                throw new Exception("Cliente não encontrado");
+            }
+
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    documento.setClienteID(clienteEncontrado.ClienteID);
+                    DocumentoController documentoController = new DocumentoController();
+                    documentoController.AtualizarDocumento(documento, connection, transaction);
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar Documento do clientes: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro inesperado ao atualizar Documento do cliente: " + ex.Message);
+                }
+            }
         }
 
         public void DeletarCliente(string email)
@@ -180,10 +239,12 @@ namespace Locadora.Controller
                 }
                 catch (SqlException ex)
                 {
+                    transaction.Rollback();
                     throw new Exception("Erro ao deletar o cliente: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
+                    transaction.Rollback();
                     throw new Exception("Erro inesperado ao deletar o cliente: " + ex.Message);
                 }
 
