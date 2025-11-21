@@ -1,6 +1,7 @@
 ﻿
 using Locadora.Controller;
 using Locadora.Models;
+using Locadora.Models.Enums;
 using Microsoft.Data.SqlClient;
 using Utils;
 
@@ -69,8 +70,8 @@ using Utils;
 
 
 #region AdicionarCategoria
-//Categoria categoria = new Categoria("Picap", 200, "Veiculo compacto com carroceria espaçosa");
-var categoriaController = new CategoriaController();
+//Categoria categoria = new Categoria("Picape", 200.00m, "Veiculo compacto com carroceria espaçosa");
+//var categoriaController = new CategoriaController();
 //try
 //{
 //    categoriaController.AdicionarCategoria(categoria);
@@ -128,13 +129,97 @@ var categoriaController = new CategoriaController();
 
 #region AtualizarCategoria
 
+//try
+//{
+//    Categoria categoria = new Categoria("Picape", 150, "Veiculo compacto com carroceria espaçosa");
+//    categoriaController.AtualizarCategoria("Picape", categoria);
+//    Console.WriteLine("Categoria atualizada com sucesso");
+//}
+//catch(Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+
+#region AdicionarVeiculo
+
+var veiculoController = new VeiculoController();
+//var veiculo = new Veiculo(2002, "XYZ-9876", "Chevrolet", "S10", 2025, EstatusVeiculo.Disponivel.ToString());
+
+//try
+//{
+//   veiculoController.AdicionarVeiculo(veiculo);
+//    Console.WriteLine("Veiculo adicionado com sucesso");
+//}
+//catch(Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+#endregion
+
+#region ListarVeiculos
+
+//List<Veiculo> veiculo = new List<Veiculo>();
+//try
+//{
+//    veiculo = veiculoController.ListarTodosVeiculos();
+
+//    foreach(var veiculoItem in veiculo)
+//    {
+//        Console.WriteLine(veiculoItem);
+//        Console.WriteLine();
+//    }
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region BuscarVeiculoPorId
+
+//try
+//{
+//    Console.WriteLine(veiculoController.BuscarVeiculoPlaca("XYZ-9876"));
+
+//}catch(Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region DeletarVeiculo
+
+//try
+//{
+    
+//    var veiculo = veiculoController.BuscarVeiculoPlaca("XYZ-9876");
+//    veiculoController.DeletarVeiculo(veiculo.VeiculoID);
+//    Console.WriteLine("Veículo excluído com sucesso");
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region AtualizarVeiculo
+
 try
 {
-    Categoria categoria = new Categoria("Picape", 150, "Veiculo compacto com carroceria espaçosa");
-    categoriaController.AtualizarCategoria("Picape", categoria);
-    Console.WriteLine("Categoria atualizada com sucesso");
+
+    veiculoController.AtualizarStatusVeiculo(EstatusVeiculo.Manutencao.ToString(), "MNO7890");
+    Console.WriteLine("Veículo atualizado com sucesso");
+
 }
-catch(Exception ex)
+catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
 }

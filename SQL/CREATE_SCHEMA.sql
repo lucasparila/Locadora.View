@@ -144,3 +144,9 @@ select *
 from tblClientes c
 left join tblDocumentos d
 on c.ClienteID = d.ClienteID;
+
+select * from tblDocumentos; 
+
+Delete from tblClientes where Telefone = '';
+
+select * from tblCategorias; 

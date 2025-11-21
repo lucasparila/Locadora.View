@@ -11,12 +11,22 @@ namespace Locadora.Models
         public readonly static string INSERTCATEGORIA = "INSERT INTO tblCategorias VALUES (@Nome, @Descricao, @Diaria);" +
                                                       "SELECT SCOPE_IDENTITY();";
 
+        //public readonly static string INSERTCATEGORIA = "EXEC sp_INSERIRCATEGORIA @Nome, @Descricao, @Diaria;"; 
+                                                 
+
         public readonly static string SELECTALLCATEGORIAS = "SELECT * " +
                                                           "FROM tblCategorias;";
 
         public readonly static string SELECTCATEGORIAPORNOME = "SELECT * " +
                                                                "FROM tblCategorias " +                                                        
                                                                "WHERE Nome = @Nome";
+
+        public readonly static string SELECTCATEGORIAPORID = "SELECT Nome " +
+                                                               "FROM tblCategorias " +
+                                                               "WHERE CategoriaID = @CategoriaID";
+
+
+
 
         public readonly static string DELETECATEGORIA = @"DELETE FROM tblCategorias WHERE CategoriaID = @CategoriaID";
 
@@ -51,7 +61,7 @@ namespace Locadora.Models
         public override string ToString()
         {
             return $"Categoria: {this.Nome}\n" +
-                $"Descrição categoria: {this.Descricao}\n" +
+                $"Descrição categoria: {(this.Descricao != null ? this.Descricao: "") }\n" +
                 $"Diaria: {this.Diaria}\n";
         }
     }

@@ -25,11 +25,11 @@ namespace Locadora.Controller
                     command.Parameters.AddWithValue("@Descricao", categoria.Descricao ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Diaria", categoria.Diaria);
 
-                    // cliente.setClienteID(Convert.ToInt32(command.ExecuteScalar())); versão 1
 
                     int categoriaId = Convert.ToInt32(command.ExecuteScalar());
                     categoria.setCategoriaId(categoriaId);
                     transaction.Commit();
+
 
                 }
                 catch (SqlException ex)
@@ -108,7 +108,7 @@ namespace Locadora.Controller
                         );
                         categoria.setCategoriaId(Convert.ToInt32(reader["CategoriaID"]));
 
-                        
+
                         return categoria;
                     }
                     return null;
@@ -120,6 +120,41 @@ namespace Locadora.Controller
                 catch (Exception ex)
                 {
                     throw new Exception("Erro inesperado ao buscar categoria por nome: " + ex.Message);
+                }
+
+            }
+        }
+
+        public string BuscaNomeCategoriaPorID(int id)
+        {
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+
+            using (connection)
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Categoria.SELECTCATEGORIAPORID, connection);
+                    command.Parameters.AddWithValue("@CategoriaID", id);
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    string categoriaNome = string.Empty;
+                    if (reader.Read())
+                    {
+                        categoriaNome = reader["Nome"].ToString() ?? string.Empty;
+
+                    }
+                    return categoriaNome;
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("Erro ao buscar categoria por id: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Erro inesperado ao buscar categoria por id: " + ex.Message);
                 }
 
             }
@@ -148,13 +183,13 @@ namespace Locadora.Controller
                     command.Parameters.AddWithValue("@Descricao", categoria.Descricao ?? (object)DBNull.Value);
                     command.Parameters.AddWithValue("@Diaria", categoria.Diaria);
                     command.Parameters.AddWithValue("@CategoriaID", categoria.CategoriaId);
-  
+
                     command.ExecuteNonQuery();
                     transaction.Commit();
                 }
                 catch (SqlException ex)
                 {
-                    transaction.Rollback(); 
+                    transaction.Rollback();
                     throw new Exception("Erro ao atualizar a categoria: " + ex.Message);
                 }
                 catch (Exception ex)
