@@ -21,7 +21,7 @@ namespace Locadora.Models
                                                                "FROM tblCategorias " +                                                        
                                                                "WHERE Nome = @Nome";
 
-        public readonly static string SELECTCATEGORIAPORID = "SELECT Nome " +
+        public readonly static string SELECTCATEGORIAPORID = "SELECT * " +
                                                                "FROM tblCategorias " +
                                                                "WHERE CategoriaID = @CategoriaID";
 

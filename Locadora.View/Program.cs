@@ -197,7 +197,7 @@ var veiculoController = new VeiculoController();
 
 //try
 //{
-    
+
 //    var veiculo = veiculoController.BuscarVeiculoPlaca("XYZ-9876");
 //    veiculoController.DeletarVeiculo(veiculo.VeiculoID);
 //    Console.WriteLine("Veículo excluído com sucesso");
@@ -212,11 +212,178 @@ var veiculoController = new VeiculoController();
 
 #region AtualizarVeiculo
 
+//try
+//{
+
+//    veiculoController.AtualizarStatusVeiculo(EstatusVeiculo.Manutencao.ToString(), "MNO7890");
+//    Console.WriteLine("Veículo atualizado com sucesso");
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+var controllerFuncionar = new FuncionarioController();
+#region InserirFuncionario
+
+//try
+//{
+//    var funcionario1 = new Funcionario("123senha", "Lucas", "424293823809", "long@gamil.com", 7.500m);
+//    var funcionario2 = new Funcionario("123senha", "Joao", "4444293923509", "j@gamil.com");
+//    //controllerFuncionar.AdicionarFuncionario(funcionario1);
+//    controllerFuncionar.AdicionarFuncionario(funcionario2);
+
+//    Console.WriteLine("Funcionario adicionado com sucesso");
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region ListarFuncionarios
+
+//try
+//{
+//    List<Funcionario> funcionarios = controllerFuncionar.ListarFuncionarios();
+
+//    foreach (var funcionario in funcionarios)
+//    {
+//        Console.WriteLine(funcionario);
+//        Console.WriteLine("---------");
+//    }
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region BuscarFuncionario
+
+//try
+//{
+//    var funcionario = controllerFuncionar.BuscarFuncionarioPorEmail("ana.costa@locadora.com");
+
+//    Console.WriteLine(funcionario);
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region AtualizarSalarioFuncionario
+
+//try
+//{
+//    controllerFuncionar.AtualizarSalarioFuncionario("ana.costa@locadora.com", 7500m);
+
+//    Console.WriteLine("Salario atualizado com sucesso"); 
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region AtualizarSenhaFuncionario
+
+//try
+//{
+//    var funcionario = controllerFuncionar.BuscarFuncionarioPorEmail("an.costa@locadora.com");
+//    if(funcionario != null)
+//    {
+//        controllerFuncionar.AtualizarSenhaFuncionario("ana123", funcionario);
+//        Console.WriteLine("Senha atualizada com sucesso");
+//    }
+//    else
+//    {
+
+//        //Console.WriteLine("funcionario não encontrado");
+
+//    }
+
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+
+#region InserirFuncionario
+
+//try
+//{
+//    controllerFuncionar.DeletarFuncionario("j@gamil.com");
+//    Console.WriteLine("Funcionario deletado com sucesso");
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region InserirLocacao
+//var clienteController = new ClienteController();
+//var locacaoController = new LocacaoController();
+
+//try
+//{
+//    var cliente = clienteController.BuscaClientePorId(1);
+//    if( cliente == null)
+//    {
+//        Console.WriteLine("Cliente não encontrado");
+//        return;
+//    }
+//    var veiculo = veiculoController.BuscarVeiculoId(2);
+//    if( veiculo == null)
+//    {
+//        Console.WriteLine("Veiculo não encontrado");
+//        return;
+//    }
+
+//    var locacao = new Locacao(cliente, veiculo, veiculo.categoria.Diaria, 5);
+
+//    locacaoController.AdicionarLocacao(locacao);
+
+//    Console.WriteLine("Locacao criada com sucesso");
+//    Console.WriteLine(locacao);
+
+//}
+//catch (Exception ex)
+//{
+//    Console.WriteLine(ex.Message);
+//}
+
+#endregion
+
+#region InserirLocacao
+
+var locacaoController = new LocacaoController();
+List<Locacao> locacoes = new List<Locacao>();
 try
 {
-
-    veiculoController.AtualizarStatusVeiculo(EstatusVeiculo.Manutencao.ToString(), "MNO7890");
-    Console.WriteLine("Veículo atualizado com sucesso");
+    locacoes = locacaoController.ListarLocacoes();
+    foreach (var locacao in locacoes)
+    {
+        Console.WriteLine(locacao);
+        Console.WriteLine("-----");
+    }
 
 }
 catch (Exception ex)

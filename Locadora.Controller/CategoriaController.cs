@@ -125,7 +125,7 @@ namespace Locadora.Controller
             }
         }
 
-        public string BuscaNomeCategoriaPorID(int id)
+        public Categoria BuscaNomeCategoriaPorID(int id)
         {
 
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
@@ -140,13 +140,19 @@ namespace Locadora.Controller
                     command.Parameters.AddWithValue("@CategoriaID", id);
                     SqlDataReader reader = command.ExecuteReader();
 
-                    string categoriaNome = string.Empty;
                     if (reader.Read())
                     {
-                        categoriaNome = reader["Nome"].ToString() ?? string.Empty;
+                        var categoria = new Categoria(
+                           reader["Nome"].ToString(),
+                           reader.GetDecimal(reader.GetOrdinal("Diaria")),
+                           reader["Descricao"] != DBNull.Value ? reader["Descricao"].ToString() : null
+                        );
+                        categoria.setCategoriaId(Convert.ToInt32(reader["CategoriaID"]));
 
+
+                        return categoria;
                     }
-                    return categoriaNome;
+                    return null;
                 }
                 catch (SqlException ex)
                 {

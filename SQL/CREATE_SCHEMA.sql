@@ -1,3 +1,8 @@
+
+--use Master;
+--drop database LocadoraBD;
+--go
+
 -- Criação do Banco de Dados
 IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'LocadoraBD')
 BEGIN
@@ -51,6 +56,7 @@ CREATE TABLE tblVeiculos (
 -- 5. Tabela tblFuncionarios (Parte do N:M com tblLocacoes via tblLocacaoFuncionarios)
 CREATE TABLE tblFuncionarios (
     FuncionarioID INT PRIMARY KEY IDENTITY(1,1),
+    Senha varchar(50) not null,
     Nome VARCHAR(100) NOT NULL,
     CPF VARCHAR(14) UNIQUE NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
@@ -59,7 +65,7 @@ CREATE TABLE tblFuncionarios (
 
 -- 6. Tabela tblLocacoes (Relacionamento 1:N com tblClientes e tblVeiculos, e N:M com tblFuncionarios)
 CREATE TABLE tblLocacoes (
-    LocacaoID INT PRIMARY KEY IDENTITY(1,1),
+    LocacaoID uniqueidentifier PRIMARY KEY DEFAULT NEWSEQUENTIALID(),
     ClienteID INT NOT NULL,
     VeiculoID INT NOT NULL,
     DataLocacao DATETIME NOT NULL DEFAULT GETDATE(),
@@ -76,7 +82,7 @@ CREATE TABLE tblLocacoes (
 -- 7. Tabela tblLocacaoFuncionarios (Tabela de Junção para o relacionamento N:M entre tblLocacoes e tblFuncionarios)
 CREATE TABLE tblLocacaoFuncionarios (
     LocacaoFuncionarioID INT PRIMARY KEY IDENTITY(1,1),
-    LocacaoID INT NOT NULL,
+    LocacaoID UNIQUEIDENTIFIER NOT NULL,
     FuncionarioID INT NOT NULL,
     CONSTRAINT FK_LocFunc_Locacoes FOREIGN KEY (LocacaoID) REFERENCES tblLocacoes(LocacaoID) ON DELETE CASCADE,
     CONSTRAINT FK_LocFunc_Funcionarios FOREIGN KEY (FuncionarioID) REFERENCES tblFuncionarios(FuncionarioID),
@@ -110,9 +116,9 @@ INSERT INTO tblVeiculos (CategoriaID, Placa, Marca, Modelo, Ano, StatusVeiculo) 
 (3, 'MNO7890', 'Jeep', 'Renegade', 2022, 'Disponível');
 
 -- Funcionários (N:M)
-INSERT INTO tblFuncionarios (Nome, CPF, Email, Salario) VALUES
-('Ana Costa', '444.555.666-77', 'ana.costa@locadora.com', 2500.00),
-('Pedro Santos', '777.888.999-00', 'pedro.santos@locadora.com', 2800.00);
+INSERT INTO tblFuncionarios (Senha, Nome, CPF, Email, Salario) VALUES
+('senha123','Ana Costa', '444.555.666-77', 'ana.costa@locadora.com', 2500.00),
+('ps123', 'Pedro Santos', '777.888.999-00', 'pedro.santos@locadora.com', 2800.00);
 
 -- Locações (para teste, sem funcionários associados ainda)
 -- Locação 1: João aluga Mobi
@@ -140,13 +146,43 @@ INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
 (2, 2);
 
-select * 
-from tblClientes c
-left join tblDocumentos d
-on c.ClienteID = d.ClienteID;
+select * from tblFuncionarios;
 
-select * from tblDocumentos; 
+SELECT FuncionarioID, Senha, Nome, CPF, Email, Salario 
+FROM tblFuncionarios
+WHERE Email = 'ana.costa@locadora.com';
+--GO
+--CREATE OR ALTER PROCEDURE sp_INSERIRCATEGORIA
+--    @NomeCategoria VARCHAR(50),
+--    @DescricaoCategoria VARCHAR(255) NULL,
+--    @DiariaCategoria DECIMAL(10,2)
+--AS
+--BEGIN
+--    SET NOCOUNT ON;
+    
+--    BEGIN TRY
+--        INSERT INTO tblCategorias (Nome, Descricao, Diaria) 
+--        VALUES (@NomeCategoria, @DescricaoCategoria, @DiariaCategoria);
+        
+--        PRINT 'Categoria adicionada!'
+--    END TRY
+--    BEGIN CATCH 
+--        print 'Um erro aconteceu ao adicionar o cliente: ' + ERROR_MESSAGE()
+--    END CATCH
+--END   
 
-Delete from tblClientes where Telefone = '';
 
-select * from tblCategorias; 
+--select * 
+--from tblClientes c
+--left join tblDocumentos d
+--on c.ClienteID = d.ClienteID;
+
+--select * from tblDocumentos; 
+
+--Delete from tblClientes where Telefone = '';
+
+--select * from tblCategorias; 
+
+--select * from tblVeiculos v
+--left join tblCategorias c
+--on v.CategoriaID = c.CategoriaID;
