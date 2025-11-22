@@ -378,12 +378,11 @@ var locacaoController = new LocacaoController();
 List<Locacao> locacoes = new List<Locacao>();
 try
 {
-    locacoes = locacaoController.ListarLocacoes();
-    foreach (var locacao in locacoes)
-    {
-        Console.WriteLine(locacao);
-        Console.WriteLine("-----");
-    }
+    var idParaBuscar = Guid.Parse("E1C7423E-F36B-1410-820C-00C896CF73F1");
+   locacaoController.AtualizarStatusLocacao(idParaBuscar, "Concluida");
+    
+       
+ 
 
 }
 catch (Exception ex)

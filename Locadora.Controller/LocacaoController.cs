@@ -5,8 +5,10 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using Utils;
 
 namespace Locadora.Controller
@@ -51,18 +53,122 @@ namespace Locadora.Controller
 
         public void AtualizarDataDevolucaoRealLocacao(Guid id, DateTime devolucao)
         {
-            throw new NotImplementedException();
+            var locacaoEncontrada = BuscarLocacaoPorId(id);
+            if (locacaoEncontrada is null)
+            {
+                throw new Exception("Locação não encontrada!");    
+            }
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAODEVOLUCAOREAL, connection, transaction);
+                    command.Parameters.AddWithValue("@DataDevolucaoReal", devolucao);
+                    command.Parameters.AddWithValue("@LocacaoID", id);
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar a data de devolução do veículo: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar a data de devolução do veículo: " + ex.Message);
+                }
+            }
         }
 
-        public void AtualizarStatusLocacao(Guid id, EStatusLocacao status)
+        public void AtualizarStatusLocacao(Guid id, string status)
         {
-            throw new NotImplementedException();
+            var locacaoEncontrada = BuscarLocacaoPorId(id);
+            if (locacaoEncontrada is null)
+            {
+                throw new Exception("Locação não encontrada!");
+            }
+
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
+
+            connection.Open();
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAOSTATUS, connection, transaction);
+                    command.Parameters.AddWithValue("@Status", status);
+                    command.Parameters.AddWithValue("@LocacaoID", id);
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar o status da locação: erro ao conectar com o banco: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar o status da locação: " + ex.Message);
+                }
+            }
         }
 
         public Locacao BuscarLocacaoPorId(Guid id)
         {
-            throw new NotImplementedException();
+            var clienteController = new ClienteController();
+            var veiculoController = new VeiculoController();
+            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+
+           
+            using (SqlCommand command = new SqlCommand(Locacao.SELECTLOCACOESBYID, connection))
+            {
+                try
+                {
+                    command.Parameters.AddWithValue("@LocacaoID", id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var cliente = clienteController.BuscaClientePorId(reader.GetInt32(1));
+                            var veiculo = veiculoController.BuscarVeiculoId(reader.GetInt32(2));
+
+                            var locacao = new Locacao(
+                                reader.GetGuid(0),
+                                cliente,
+                                veiculo,
+                                reader.GetDateTime(3),
+                                reader.GetDateTime(4),
+                                reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
+                                reader.GetDecimal(6),
+                                reader.GetDecimal(7),
+                                reader.GetDecimal(8),
+                                reader.GetString(9)
+                             );
+                            return locacao;
+                        }
+
+                    }
+                    return null;
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception("Locação não encontrada: erro no acesso ao banco" + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Locação não encontrada" + ex.Message);
+                }
+            }
         }
+        
+       
 
         public List<Locacao> ListarLocacoes()
         {
@@ -82,14 +188,14 @@ namespace Locadora.Controller
                         {
                             var cliente = clienteController.BuscaClientePorId(reader.GetInt32(1));
                             var veiculo = veiculoController.BuscarVeiculoId(reader.GetInt32(2));
-                            
+
                             var locacao = new Locacao(
                                 reader.GetGuid(0),
                                 cliente,
                                 veiculo,
                                 reader.GetDateTime(3),
                                 reader.GetDateTime(4),
-                                reader.IsDBNull(5)? (DateTime?)null : reader.GetDateTime(5),
+                                reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
                                 reader.GetDecimal(6),
                                 reader.GetDecimal(7),
                                 reader.GetDecimal(8),

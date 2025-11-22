@@ -18,7 +18,15 @@ namespace Locadora.Models
         public readonly static string SELECTALLLOCACOES = @"SELECT LocacaoID, ClienteID, VeiculoID, DataLocacao, DataDevolucaoPrevista, DataDevolucaoReal, 
                                                           ValorDiaria, ValorTotal, Multa, Status
                                                           FROM tblLocacoes;";
-                                                         
+
+        public readonly static string SELECTLOCACOESBYID = @"SELECT LocacaoID, ClienteID, VeiculoID, DataLocacao, DataDevolucaoPrevista, DataDevolucaoReal, 
+                                                           ValorDiaria, ValorTotal, Multa, Status
+                                                           FROM tblLocacoes
+                                                           WHERE LocacaoID = @LocacaoID";
+
+        public readonly static string UPDATELOCACAODEVOLUCAOREAL = "UPDATE tblLocacoes SET DataDevolucaoReal = @DataDEvolucaoReal WHERE LocacaoID = @LocacaoID";
+        public readonly static string UPDATELOCACAOSTATUS = "UPDATE tblLocacoes SET Status = @Status WHERE LocacaoID = @LocacaoID";
+
         public Guid LocacaoID { get; private set; }
         public Cliente cliente { get; private set; }
         public  Veiculo veiculo { get; private set; }
