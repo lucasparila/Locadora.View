@@ -73,13 +73,9 @@ namespace Locadora.Controller
             }
         }
 
-        public void AtualizarSalarioFuncionario(string email, decimal salario)
+        public void AtualizarSalarioFuncionario(decimal salario, Funcionario funcionario)
         {
-            var funcionario = BuscarFuncionarioPorEmail(email);
-            if (funcionario is null)
-            {
-                throw new Exception("Funcionario não encontrado");
-            }
+           
 
             funcionario.setSalario(salario);
 

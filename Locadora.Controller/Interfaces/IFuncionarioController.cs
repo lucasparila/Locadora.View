@@ -13,7 +13,7 @@ namespace Locadora.Controller.Interfaces
         public void AdicionarFuncionario(Funcionario funcionario);
         public List<Funcionario> ListarFuncionarios();
         public Funcionario BuscarFuncionarioPorEmail(string email);
-        public void AtualizarSalarioFuncionario(string email, decimal salario);
+        public void AtualizarSalarioFuncionario(decimal salario,Funcionario funcionario);
         public void AtualizarSenhaFuncionario(string senha, Funcionario funcionario);
         public void DeletarFuncionario(string email);
     }

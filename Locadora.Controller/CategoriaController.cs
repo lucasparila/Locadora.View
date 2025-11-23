@@ -169,14 +169,9 @@ namespace Locadora.Controller
         }
 
 
-        public void AtualizarCategoria(string nome, Categoria categoria)
+        public void AtualizarCategoria( Categoria categoria)
         {
-            var categoriaEncontrada = BuscaCategoriaPorNome(nome);
-            if (categoriaEncontrada is null)
-            {
-                throw new Exception("Categoria não encontrada");
-            }
-
+          
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
             connection.Open();

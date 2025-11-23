@@ -139,14 +139,18 @@ INSERT INTO tblLocacoes (ClienteID, VeiculoID, DataLocacao, DataDevolucaoPrevist
 -- LocaçãoFuncionarios (N:M)
 -- Ana e Pedro envolvidos na Locação 1
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
-(1, 1),
-(1, 2);
+('E1C7423E-F36B-1410-820C-00C896CF73F1', 1),
+('E1C7423E-F36B-1410-820C-00C896CF73F1', 2);
 
 -- Pedro envolvido na Locação 2
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
-(2, 2);
+('E5C7423E-F36B-1410-820C-00C896CF73F1', 2);
+
+
+select * from tblClientes;
 
 select * from tblFuncionarios;
+select * from tblLocacoes; 
 
 SELECT FuncionarioID, Senha, Nome, CPF, Email, Salario 
 FROM tblFuncionarios

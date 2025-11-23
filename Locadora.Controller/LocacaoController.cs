@@ -51,13 +51,9 @@ namespace Locadora.Controller
 
         }
 
-        public void AtualizarDataDevolucaoRealLocacao(Guid id, DateTime devolucao)
+        public void AtualizarDataDevolucaoRealLocacao(Locacao locacao, DateTime? devolucao)
         {
-            var locacaoEncontrada = BuscarLocacaoPorId(id);
-            if (locacaoEncontrada is null)
-            {
-                throw new Exception("Locação não encontrada!");    
-            }
+            
 
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
@@ -67,8 +63,8 @@ namespace Locadora.Controller
                 try
                 {
                     SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAODEVOLUCAOREAL, connection, transaction);
-                    command.Parameters.AddWithValue("@DataDevolucaoReal", devolucao);
-                    command.Parameters.AddWithValue("@LocacaoID", id);
+                    command.Parameters.AddWithValue("@DataDevolucaoReal", devolucao ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@LocacaoID", locacao.LocacaoID);
                     command.ExecuteNonQuery();
                     transaction.Commit();
                 }
@@ -85,14 +81,36 @@ namespace Locadora.Controller
             }
         }
 
-        public void AtualizarStatusLocacao(Guid id, string status)
+        public void AtualizarValorTotalLocacao(Locacao locacao)
         {
-            var locacaoEncontrada = BuscarLocacaoPorId(id);
-            if (locacaoEncontrada is null)
-            {
-                throw new Exception("Locação não encontrada!");
-            }
+            SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
+            connection.Open();
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAOSTATUS, connection, transaction);
+                    command.Parameters.AddWithValue("@ValorTotal", locacao.ValorTotal);
+                    command.Parameters.AddWithValue("@LocacaoID", locacao.LocacaoID);
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (SqlException ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar o valor total da locação: erro ao conectar com o banco: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Erro ao atualizar o valor total da locação: " + ex.Message);
+                }
+            }
+        }
+        public void AtualizarStatusLocacao(Locacao locacao, string status)
+        {
+            
             SqlConnection connection = new SqlConnection(ConnectionDB.GetConnectionString());
 
             connection.Open();
@@ -102,7 +120,7 @@ namespace Locadora.Controller
                 {
                     SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAOSTATUS, connection, transaction);
                     command.Parameters.AddWithValue("@Status", status);
-                    command.Parameters.AddWithValue("@LocacaoID", id);
+                    command.Parameters.AddWithValue("@LocacaoID", locacao.LocacaoID);
                     command.ExecuteNonQuery();
                     transaction.Commit();
                 }

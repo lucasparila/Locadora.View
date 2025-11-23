@@ -26,6 +26,9 @@ namespace Locadora.Models
 
         public readonly static string UPDATELOCACAODEVOLUCAOREAL = "UPDATE tblLocacoes SET DataDevolucaoReal = @DataDEvolucaoReal WHERE LocacaoID = @LocacaoID";
         public readonly static string UPDATELOCACAOSTATUS = "UPDATE tblLocacoes SET Status = @Status WHERE LocacaoID = @LocacaoID";
+        public readonly static string UPDATELOCACAOVALORTOTAL = "UPDATE tblLocacoes SET ValorTotal = @ValorTotal WHERE LocacaoID = @LocacaoID";
+
+
 
         public Guid LocacaoID { get; private set; }
         public Cliente cliente { get; private set; }
@@ -67,10 +70,46 @@ namespace Locadora.Models
             Status = status;
         }
 
-        public void setDataDevolucaoReal(DateTime dataDevolucao)
+        public void setDataDevolucaoReal(DateTime? dataDevolucao)
         {
             this.DataDevolucaoReal = dataDevolucao;
         }
+        public void setValorTotal(decimal valorTotal)
+        {
+            this.ValorTotal = valorTotal;
+        }
+        public void setStatus(string status)
+        {
+            this.Status= status;
+        }
+        public decimal CalcularValorFinal()
+        {
+            if (DataDevolucaoReal == null)
+                throw new Exception("A data de devolução real não foi definida.");
+
+           
+            int diasTotais = (DataDevolucaoReal.Value - DataLocacao).Days;
+
+            if (diasTotais < 1)
+                diasTotais = 1; 
+
+            decimal valorBase = diasTotais * ValorDiaria;
+
+            
+            int diasAtraso = (DataDevolucaoReal.Value - DataDevolucaoPrevista).Days;
+
+            decimal valorMulta = 0;
+
+            if (diasAtraso > 0)
+            {
+                
+                valorMulta = Multa + (diasAtraso * ValorDiaria);
+            }
+
+            this.ValorTotal = valorBase + valorMulta;
+            return valorBase + valorMulta;
+        }
+
 
         public override string ToString()
         {
