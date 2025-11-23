@@ -16,6 +16,9 @@ namespace Locadora.Models
         public readonly static string SELECTFUNCIONARIOPOREMAIL = @"SELECT FuncionarioID, Senha, Nome, CPF, Email, Salario 
                                                                    FROM tblFuncionarios
                                                                     WHERE Email = @Email";
+        public readonly static string SELECTFUNCIONARIOPORID = @"SELECT FuncionarioID, Senha, Nome, CPF, Email, Salario 
+                                                                   FROM tblFuncionarios
+                                                                    WHERE FuncionarioID = @FuncionarioID";
 
         public readonly static string UPDATESALARIOFUNCIONARIO = @"UPDATE tblFuncionarios
                                                                  SET Salario = @Salario

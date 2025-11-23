@@ -93,10 +93,10 @@ namespace Locadora.View.Menus
         {
             Console.Clear();
             Console.WriteLine();
-
+            LocacaoFuncionarioController controllerLocacaoFuncionario = new LocacaoFuncionarioController ();
             try
             {
-                var list = controllerLocacao.ListarLocacoes();
+                var list = controllerLocacaoFuncionario.ListarLocaoesFuncionarios();
 
                 foreach (var locacao in list)
                 {
@@ -147,7 +147,8 @@ namespace Locadora.View.Menus
                 controllerLocacao.AtualizarDataDevolucaoRealLocacao(locacao, null);
                 controllerLocacao.AtualizarStatusLocacao(locacao, EStatusLocacao.Cancelada.ToString());
                 controllerLocacao.AtualizarValorTotalLocacao(locacao);
-
+                var controllerVeiculo = new VeiculoController();
+                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponivel.ToString(), locacao.veiculo.Placa);
                 Console.WriteLine($"Valor total da locação: R$ 0");
 
                 Console.WriteLine("\n >>>  Locacao cancelada com sucesso!\n");
@@ -191,7 +192,8 @@ namespace Locadora.View.Menus
                 controllerLocacao.AtualizarDataDevolucaoRealLocacao(locacao, DateTime.Now);
                 controllerLocacao.AtualizarStatusLocacao(locacao, EStatusLocacao.Concluida.ToString());
                 controllerLocacao.AtualizarValorTotalLocacao(locacao);
-
+                var controllerVeiculo = new VeiculoController();
+                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponivel.ToString(), locacao.veiculo.Placa);
                 Console.WriteLine($"Valor total da locação: R$ {valorTotal}");
                 
                 Console.WriteLine("\n >>>  Locacao finalizada com sucesso!\n");

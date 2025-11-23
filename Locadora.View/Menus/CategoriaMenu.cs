@@ -146,7 +146,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |                  >      Categoria      <                 |");
                 Console.WriteLine(" |----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Categoria   |   [ 2 ] Exibir Categorias  |");
-                Console.WriteLine(" | [ 3 ] Atualizar Categoria   |   [ 5 ] Deletar Categoria  |");
+                Console.WriteLine(" | [ 3 ] Atualizar Categoria   |   [ 4 ] Deletar Categoria  |");
                 Console.WriteLine(" | [ 5 ] Voltar                |                            |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=|");
                 Console.WriteLine();

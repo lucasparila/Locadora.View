@@ -22,19 +22,19 @@ namespace Locadora.Controller
                 command.Parameters.AddWithValue("@ClienteId", documento.ClienteID);
                 command.Parameters.AddWithValue("@TipoDocumento", documento.TipoDocumento);
                 command.Parameters.AddWithValue("@Numero", documento.Numero);
-                command.Parameters.AddWithValue("@DataEmissa", documento.DataEmissao);
+                command.Parameters.AddWithValue("@DataEmissao", documento.DataEmissao);
                 command.Parameters.AddWithValue("@DataValidade", documento.DataValidade);
 
                 command.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                transaction.Rollback();
+                
                 throw new Exception("Erro ao adicionar documento: " + ex.Message);
             }
             catch (Exception ex)
             {
-                transaction.Rollback();
+                
                 throw new Exception("Erro inesperado ao adicionar documento: " + ex.Message);
             }
 

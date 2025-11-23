@@ -33,9 +33,6 @@ namespace Locadora.View.Menus
             int year = Validar.ValidarInputInt("Ano do Veículo: ");
             if (year == 0) return;
 
-            string? vehicleStatus = Validar.ValidarInputString("Modelo: ");
-            if (vehicleStatus == null) return;
-
             Veiculo vehicle = new Veiculo(categoria, plate, mark, model, year, EstatusVeiculo.Disponivel.ToString());
 
             try
@@ -163,7 +160,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |                       >      Veículo      <                      |");
                 Console.WriteLine(" |------------------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Veículo   |   [ 2 ] Exibir Veículos Alugados     |");
-                Console.WriteLine(" | [ 3 ] Atualizar Stutus    |   [ 4 ] Exibir Veículos Disponíveis  |");
+                Console.WriteLine(" | [ 3 ] Atualizar Status    |   [ 4 ] Exibir Veículos Disponíveis  |");
                 Console.WriteLine(" | [ 5 ] Exibir Categorias   |   [ 6 ] Exibir Todos os Veículos     |");
                 Console.WriteLine(" | [ 7 ] Deletar Veículo     |   [ 8 ] Voltar                       |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=|");

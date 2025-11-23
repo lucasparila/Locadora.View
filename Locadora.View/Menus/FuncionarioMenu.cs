@@ -79,7 +79,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine("\n=-=-=   >  Funcionario  <   =-=-=\n");
                 Console.WriteLine(vlr + "\n");
 
-                string? senha = Validar.ValidarInputString("Informe o telefone atualizado: ");
+                string? senha = Validar.ValidarInputString("Informe a senha atualizada: ");
                 if (senha == null) return;
 
                 Controller.AtualizarSenhaFuncionario(senha, vlr);
@@ -111,7 +111,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine("\n=-=-=   >  Funcionario  <   =-=-=\n");
                 Console.WriteLine(vlr + "\n");
 
-                decimal salario = Validar.ValidarInputDecimal("Gidite o novo salário do funcionário: ");
+                decimal salario = Validar.ValidarInputDecimal("Digite o novo salário do funcionário: ");
                 if (salario == null) return;
 
                 Controller.AtualizarSalarioFuncionario(salario, vlr);
@@ -175,7 +175,7 @@ namespace Locadora.View.Menus
             {
                 Console.Clear();
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
-                Console.WriteLine(" |                   >      Cliente      <                   |");
+                Console.WriteLine(" |                   >      Funcionário      <               |");
                 Console.WriteLine(" |-----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Funcionario|   [ 2 ] Exibir Funcionarios  |");
                 Console.WriteLine(" | [ 3 ] Atualizar Senha      |   [ 4 ] Atualizar Salario    |");

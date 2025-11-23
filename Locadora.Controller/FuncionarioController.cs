@@ -149,6 +149,50 @@ namespace Locadora.Controller
             }
         }
 
+        public Funcionario BuscarFuncionarioPorId(int id)
+        {
+
+            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
+            connection.Open();
+            using (SqlCommand command = new SqlCommand(Funcionario.SELECTFUNCIONARIOPORID, connection))
+            {
+                try
+                {
+                    command.Parameters.AddWithValue("@FuncionarioId", id);
+                    SqlDataReader reader = command.ExecuteReader();
+
+
+
+                    if (reader.Read())
+                    {
+                        decimal? salario = reader.IsDBNull(5) ? (decimal?)null : reader.GetDecimal(5);
+                        var funcionario = new Funcionario(
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetString(3),
+                            reader.GetString(4),
+                            salario
+                        );
+
+                        funcionario.setId(reader.GetInt32(0));
+                        return funcionario;
+                    }
+                    throw new Exception($"Funcionario não encontrado");
+
+                }
+                catch (SqlException ex)
+                {
+
+                    throw new Exception($"Funcionario não encontrado " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception($"Funcionario não encontrado " + ex.Message);
+                }
+            }
+        }
+
         public void DeletarFuncionario(string email)
         {
             var funcionario = BuscarFuncionarioPorEmail(email);

@@ -90,7 +90,7 @@ namespace Locadora.Controller
             {
                 try
                 {
-                    SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAOSTATUS, connection, transaction);
+                    SqlCommand command = new SqlCommand(Locacao.UPDATELOCACAOVALORTOTAL, connection, transaction);
                     command.Parameters.AddWithValue("@ValorTotal", locacao.ValorTotal);
                     command.Parameters.AddWithValue("@LocacaoID", locacao.LocacaoID);
                     command.ExecuteNonQuery();
