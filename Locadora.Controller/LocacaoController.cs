@@ -15,7 +15,7 @@ namespace Locadora.Controller
 {
     public class LocacaoController : ILocacaoController
     {
-        public void AdicionarLocacao(Locacao locacao)
+        public Guid AdicionarLocacao(Locacao locacao)
         {
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
@@ -33,8 +33,9 @@ namespace Locadora.Controller
                     command.Parameters.AddWithValue("@ValorTotal", locacao.ValorTotal);
                     command.Parameters.AddWithValue("@Multa", locacao.Multa);
                     command.Parameters.AddWithValue("@Status", locacao.Status);
-                    command.ExecuteNonQuery();
+                    Guid locacaoIdGerado = (Guid)command.ExecuteScalar();
                     transaction.Commit();
+                    return locacaoIdGerado;
 
                 }
                 catch (SqlException ex)

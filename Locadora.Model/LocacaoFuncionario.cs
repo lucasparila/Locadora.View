@@ -14,32 +14,45 @@ namespace Locadora.Models
 
         public readonly static string SELECTLOCACAOFUNCIONARIOPORID = "SELECT LocacaoFuncionarioID, LocacaoID, FuncionarioID " +
                                                                        "FROM tblLocacaoFuncionarios " +
-                                                                        "WHERE LocacaoFuncionarioID = @LocacaoFuncionarioID;";
+                                                                        "WHERE LocacaoID = @LocacaoID;";
 
         public readonly static string SELECTLOCACAOFUNCIONARIOALL = "SELECT LocacaoFuncionarioID, LocacaoID, FuncionarioID " +
                                                                        "FROM tblLocacaoFuncionarios;";
-                                                                       
-        public int ID {  get; private set; }
-        public Locacao locacao {  get; private set; }
-        public Funcionario funcionario { get; private set; }
 
-        public LocacaoFuncionario(Locacao locacao, Funcionario funcionario)
+        public int ID { get; private set; }
+        public Locacao locacao { get; private set; }
+        public List<Funcionario> funcionarios { get; private set; }
+
+        public LocacaoFuncionario(Locacao locacao)
         {
             this.locacao = locacao;
-            this.funcionario = funcionario;
+            this.funcionarios = new List<Funcionario>();
         }
-        public LocacaoFuncionario( int id, Locacao locacao, Funcionario funcionario): this(locacao, funcionario)
+        public LocacaoFuncionario(int id, Locacao locacao) : this(locacao)
         {
             this.ID = id;
         }
 
+        public void addFuncionario(Funcionario funcionario)
+        {
+            if (!funcionarios.Contains(funcionario))
+            {
+                funcionarios.Add(funcionario);
+            }
+        }
+
         public override string ToString()
         {
-            return $"{this.locacao.ToString()}" +
-                $"Modelo do veículo: {this.locacao.veiculo.Modelo}\n" +
-                $"Placa do veículo: {this.locacao.veiculo.Placa}\n" +
-                $"Nome do Funcionário: {this.funcionario.Nome}\n";
-                
+            string dados = $"{this.locacao.ToString()}";
+            if (this.funcionarios.Count > 0)
+            {
+                foreach(var funcionario in this.funcionarios)
+                {
+                    dados += $"Funcionario: {funcionario.Nome}\n";
+                }
+            }
+            return dados;
+
         }
     }
 }

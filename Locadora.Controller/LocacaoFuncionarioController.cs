@@ -12,7 +12,7 @@ namespace Locadora.Controller
 {
     public class LocacaoFuncionarioController : ILocacaoFuncionarioController
     {
-        public void AdicionarLocacaoFuncionario(LocacaoFuncionario locacaoFuncionario)
+        public void AdicionarLocacaoFuncionario(LocacaoFuncionario locacaoFuncionario, Funcionario funcionario)
         {
             var connection = new SqlConnection(ConnectionDB.GetConnectionString());
             connection.Open();
@@ -22,7 +22,7 @@ namespace Locadora.Controller
                 {
                     SqlCommand command = new SqlCommand(LocacaoFuncionario.INSERTLOCACAOFUNCIONARIO, connection, transaction);
                     command.Parameters.AddWithValue("@LocacaoID", locacaoFuncionario.locacao.LocacaoID);
-                    command.Parameters.AddWithValue("@FuncionarioID", locacaoFuncionario.funcionario.FuncionarioID);
+                    command.Parameters.AddWithValue("@FuncionarioID", funcionario.FuncionarioID);
 
                     command.ExecuteNonQuery();
                     transaction.Commit();
@@ -51,35 +51,41 @@ namespace Locadora.Controller
             {
                 try
                 {
-                    command.Parameters.AddWithValue("@Email", id);
+                    command.Parameters.AddWithValue("@LocacaoID", id);
                     SqlDataReader reader = command.ExecuteReader();
 
 
                     if (reader.Read())
                     {
                         Locacao locacao = controllerLocacao.BuscarLocacaoPorId(reader.GetGuid(1));
-                        Funcionario funcionario = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
+                        
+
                         var locacaoFuncionario = new LocacaoFuncionario(
                             reader.GetInt32(0),
-                            locacao,
-                            funcionario   
+                            locacao
                         );
+                        while (reader.Read())
+                        {
+                            Funcionario funcionario = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
+                            locacaoFuncionario.addFuncionario(funcionario);
+                        }
 
-                      
                         return locacaoFuncionario;
                     }
-                    throw new Exception($"Locacao não encontrada");
+
+                    
+                    throw new Exception($"Locacao com funcionario não encontrada");
 
                 }
                 catch (SqlException ex)
                 {
 
-                    throw new Exception($"Locacao não encontrada " + ex.Message);
+                    throw new Exception($"Locacao com funcionario não encontrada " + ex.Message);
                 }
                 catch (Exception ex)
                 {
 
-                    throw new Exception($"Locacao não encontrada " + ex.Message);
+                    throw new Exception($"Locacao com funcionario não encontrada " + ex.Message);
                 }
             }
 
@@ -103,14 +109,17 @@ namespace Locadora.Controller
                     {
                         Locacao locacao = controllerLocacao.BuscarLocacaoPorId(reader.GetGuid(1));
                         Funcionario funcionario = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
-                        var locacaoFuncionario = new LocacaoFuncionario(
-                            reader.GetInt32(0),
-                            locacao,
-                            funcionario
-                        );
 
-                        locacoesFuncionario.Add(locacaoFuncionario);
-                        
+                        var locFunc = locacoesFuncionario.FirstOrDefault(p => p.locacao.LocacaoID == reader.GetGuid(1));
+
+
+                        if (locFunc == null)
+                        {
+                            locFunc = new LocacaoFuncionario(reader.GetInt32(0), locacao);
+                            locacoesFuncionario.Add(locFunc);
+                        }
+                        locFunc.addFuncionario(funcionario);
+                                                          
                     }
                     return locacoesFuncionario;
 

@@ -10,7 +10,7 @@ namespace Locadora.Controller.Interfaces
 {
     public interface ILocacaoController
     {
-        public void AdicionarLocacao(Locacao locacao);
+        public Guid AdicionarLocacao(Locacao locacao);
         public List<Locacao> ListarLocacoes();
         public Locacao BuscarLocacaoPorId(Guid id);
 

@@ -33,7 +33,7 @@ namespace Locadora.View.Menus
             int year = Validar.ValidarInputInt("Ano do Veículo: ");
             if (year == 0) return;
 
-            Veiculo vehicle = new Veiculo(categoria, plate, mark, model, year, EstatusVeiculo.Disponivel.ToString());
+            Veiculo vehicle = new Veiculo(categoria, plate, mark, model, year, EstatusVeiculo.Disponível.ToString());
 
             try
             {
@@ -67,6 +67,63 @@ namespace Locadora.View.Menus
             }
         }
 
+        private void SelectDisponivelService()
+        {
+            Console.Clear();
+            Console.WriteLine();
+
+            try
+            {
+                int contador = 0;
+                var list = Controller.ListarTodosVeiculos();
+
+                foreach (var vehicle in list)
+                {
+                    if (vehicle.StatusVeiculo == "Disponivel" || vehicle.StatusVeiculo == "Disponível")
+                    {
+                        Console.WriteLine(vehicle);
+                        contador++;
+                    }
+                }
+                if(contador == 0)
+                {
+                    Console.WriteLine("Não nehnum veículo dispnível no momento.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void SelectAlugadosService()
+        {
+            Console.Clear();
+            Console.WriteLine();
+
+            try
+            {
+                int contador = 0;
+                var list = Controller.ListarTodosVeiculos();
+
+                foreach (var vehicle in list)
+                {
+                    if (vehicle.StatusVeiculo == "Alugado")
+                    {
+                        Console.WriteLine(vehicle);
+                        contador++;
+                    }
+                }
+                if (contador == 0)
+                {
+                    Console.WriteLine("Não nehnum veículo alugado no momento.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         private void UpdateStatusService()
         {
@@ -89,7 +146,7 @@ namespace Locadora.View.Menus
                 if (vehicleStatus == 0) return;
 
                 if (vehicleStatus == 1)
-                    Controller.AtualizarStatusVeiculo(EstatusVeiculo.Disponivel.ToString(), plate);
+                    Controller.AtualizarStatusVeiculo(EstatusVeiculo.Disponível.ToString(), plate);
                 else if (vehicleStatus == 2)
                     Controller.AtualizarStatusVeiculo(EstatusVeiculo.Alugado.ToString(), plate);
                 else if (vehicleStatus == 3)
@@ -176,13 +233,13 @@ namespace Locadora.View.Menus
                         InsertService();
                         break;
                     case 2:
-                        SelectAllService();  // fazer ainda
+                        SelectAlugadosService(); 
                         break;
                     case 3:
                         UpdateStatusService();
                         break;
                     case 4:
-                        SelectAllService();  // fazer ainda
+                        SelectDisponivelService();  
                         break;
                     case 5:
                         listCategory.SelectAllService();

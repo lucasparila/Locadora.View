@@ -60,7 +60,7 @@ namespace Locadora.View.Menus
 
                 Console.WriteLine("\n=-=-=   >  Veículo  <   =-=-=\n");
                 Console.WriteLine(veiculo + "\n");
-                if(veiculo.StatusVeiculo != EstatusVeiculo.Disponivel.ToString())
+                if(veiculo.StatusVeiculo != EstatusVeiculo.Disponível.ToString())
                 {
                     Console.WriteLine($"Status do veículo: {veiculo.StatusVeiculo}. Não disponível para locação. Por favor, escolha um veículo disponível.");
                     return;
@@ -85,6 +85,87 @@ namespace Locadora.View.Menus
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);   
+            }
+        }
+
+
+        private void InsertServiceFuncionario(Funcionario funcionario)
+        {
+            Cliente cliente = null;
+            Veiculo veiculo = null;
+            int diarias;
+
+            string? email = Validar.ValidarInputString("Digite o email do cliente: ");
+            if (email == null) return;
+
+            try
+            {
+                cliente = clienteController.BuscaClientePorEmail(email);
+                if (cliente is null)
+                {
+                    Console.WriteLine("\nNão existe cliente com esse email cadastrado!");
+                    return;
+                }
+
+                Console.WriteLine("\n=-=-=   >  Cliente  <   =-=-=\n");
+                Console.WriteLine(cliente + "\n");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+
+            string? placa = Validar.ValidarInputString("Digite a placa do veículo: ");
+            if (placa == null) return;
+
+            try
+            {
+                veiculo = controllerVeiculo.BuscarVeiculoPlaca(placa);
+                if (veiculo is null)
+                {
+                    Console.WriteLine("\nNão existe veículo cadastrado com essa placa!");
+                    return;
+                }
+
+                Console.WriteLine("\n=-=-=   >  Veículo  <   =-=-=\n");
+                Console.WriteLine(veiculo + "\n");
+                if (veiculo.StatusVeiculo != EstatusVeiculo.Disponível.ToString())
+                {
+                    Console.WriteLine($"Status do veículo: {veiculo.StatusVeiculo}. Não disponível para locação. Por favor, escolha um veículo disponível.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            diarias = Validar.ValidarInputInt("Diarias: ");
+            if (diarias == 0) return;
+
+            try
+            {
+                var locacao = new Locacao(cliente, veiculo, veiculo.categoria.Diaria, diarias);
+                Guid idLocacao = controllerLocacao.AdicionarLocacao(locacao);
+                locacao.setId(idLocacao);
+                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Alugado.ToString(), veiculo.Placa);
+                var locacaoFuncionario = new LocacaoFuncionario(locacao);
+
+
+
+
+                locacaoFuncionario.addFuncionario(funcionario);
+                var controllerLocacaoFunconario = new LocacaoFuncionarioController();
+                controllerLocacaoFunconario.AdicionarLocacaoFuncionario(locacaoFuncionario, funcionario);
+                Console.WriteLine("\n >>>  Locação realizada com sucesso!");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -148,7 +229,7 @@ namespace Locadora.View.Menus
                 controllerLocacao.AtualizarStatusLocacao(locacao, EStatusLocacao.Cancelada.ToString());
                 controllerLocacao.AtualizarValorTotalLocacao(locacao);
                 var controllerVeiculo = new VeiculoController();
-                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponivel.ToString(), locacao.veiculo.Placa);
+                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponível.ToString(), locacao.veiculo.Placa);
                 Console.WriteLine($"Valor total da locação: R$ 0");
 
                 Console.WriteLine("\n >>>  Locacao cancelada com sucesso!\n");
@@ -193,7 +274,7 @@ namespace Locadora.View.Menus
                 controllerLocacao.AtualizarStatusLocacao(locacao, EStatusLocacao.Concluida.ToString());
                 controllerLocacao.AtualizarValorTotalLocacao(locacao);
                 var controllerVeiculo = new VeiculoController();
-                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponivel.ToString(), locacao.veiculo.Placa);
+                controllerVeiculo.AtualizarStatusVeiculo(EstatusVeiculo.Disponível.ToString(), locacao.veiculo.Placa);
                 Console.WriteLine($"Valor total da locação: R$ {valorTotal}");
                 
                 Console.WriteLine("\n >>>  Locacao finalizada com sucesso!\n");
@@ -205,7 +286,7 @@ namespace Locadora.View.Menus
             }
         }
 
-        public void LocacaoMenu()
+        public void LocacaoMenuAdministrador()
         {
             int opcao = 0;
             do
@@ -249,6 +330,54 @@ namespace Locadora.View.Menus
                 Console.ReadLine();
 
             } while (true);
+        }
+
+
+            public void LocacaoMenuFuncionario(Funcionario funcionario)
+             {
+            int opcao = 0;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
+                Console.WriteLine(" |                   >      Cliente      <                   |");
+                Console.WriteLine(" |-----------------------------------------------------------|");
+                Console.WriteLine(" | [ 1 ] Realizar Locação     |   [ 2 ] Exibir Locações      |");
+                Console.WriteLine(" | [ 3 ] Finalizar Locação    |   [ 4 ] Cancelar Locação     |");
+                Console.WriteLine(" | [ 5 ] Voltar               |                              |");
+                Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
+                Console.WriteLine();
+                Console.Write("  >>> Informe o menu desejado: ");
+                string entrada = Console.ReadLine()!;
+                bool conversao = int.TryParse(entrada, out opcao);
+                Console.WriteLine("---------------------------------------");
+
+                switch (opcao)
+                {
+                    case 1:
+                        InsertServiceFuncionario( funcionario);
+                        break;
+                    case 2:
+                        SelectAllService();
+                        break;
+                    case 3:
+                        UpdateLocacaoService();
+                        break;
+                    case 4:
+                        UpdateCancelLocacaoService();
+                        break;
+                    case 5:
+                        return;
+                    default:
+                        Console.WriteLine("\nOpção Inválida. Tente novamente.");
+                        break;
+                }
+
+                Console.Write("\n  >  Pressione qualquer Tecla para prosseguir ");
+                Console.ReadLine();
+
+            } while (true);
+
         }
     }
 }

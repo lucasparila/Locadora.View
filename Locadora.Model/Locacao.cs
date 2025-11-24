@@ -11,6 +11,7 @@ namespace Locadora.Models
     {
         public readonly static string INSERTLOCACAO = @"INSERT INTO tblLocacoes(ClienteID, VeiculoID, DataLocacao, DataDevolucaoPrevista, DataDevolucaoReal, 
                                                        ValorDiaria, ValorTotal, Multa, Status)
+                                                       OUTPUT INSERTED.LocacaoID
                                                        VALUES
                                                        (@ClienteID, @VeiculoID, @DataLocacao, @DataDevolucaoPrevista, @DataDevolucaoReal, 
                                                        @ValorDiaria, @ValorTotal, @Multa, @Status);";
@@ -73,6 +74,11 @@ namespace Locadora.Models
         public void setDataDevolucaoReal(DateTime? dataDevolucao)
         {
             this.DataDevolucaoReal = dataDevolucao;
+        }
+
+        public void setId(Guid id)
+        {
+            this.LocacaoID = id;
         }
         public void setValorTotal(decimal valorTotal)
         {
