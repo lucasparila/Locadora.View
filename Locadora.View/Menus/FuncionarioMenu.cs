@@ -49,11 +49,35 @@ namespace Locadora.View.Menus
             try
             {
                 var list = Controller.ListarFuncionarios();
-
+                Console.WriteLine("\n=-=-=   >  Clientes  <   =-=-=\n");
                 foreach (var funcionario in list)
                 {
                     Console.WriteLine(funcionario);
+                    Console.WriteLine("------------------------------");
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        private void FindService()
+        {
+
+
+            try
+            {
+                string? email = Validar.ValidarInputString("Informe o email para busca do funcionario: ");
+                if (email == null) return;
+                var funcionario = Controller.BuscarFuncionarioPorEmail(email);
+
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("\n=-=-=   >  Funcionário  <   =-=-=\n");
+
+                Console.WriteLine(funcionario);
+                Console.WriteLine("-------------------------------------");
+
             }
             catch (Exception ex)
             {
@@ -117,7 +141,7 @@ namespace Locadora.View.Menus
                 Controller.AtualizarSalarioFuncionario(salario, vlr);
 
                 Console.WriteLine("\n >>>  Salario atualizado com sucesso!\n");
-               
+
             }
             catch (Exception ex)
             {
@@ -219,7 +243,8 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |-----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Funcionario|   [ 2 ] Exibir Funcionarios  |");
                 Console.WriteLine(" | [ 3 ] Atualizar Senha      |   [ 4 ] Atualizar Salario    |");
-                Console.WriteLine(" | [ 5 ] Deletar Funcionario  |   [ 6 ] Voltar               |");
+                Console.WriteLine(" | [ 5 ] Deletar Funcionario  |   [ 6 ] Buscar Funcionario   |");
+                Console.WriteLine(" | [ 7 ] Voltar               |                              |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
                 Console.WriteLine();
                 Console.Write("  >>> Informe o menu desejado: ");
@@ -245,6 +270,9 @@ namespace Locadora.View.Menus
                         DeleteService();
                         break;
                     case 6:
+                        FindService();
+                        break;
+                    case 7:
                         return;
                     default:
                         Console.WriteLine("\nOpção Inválida. Tente novamente.");

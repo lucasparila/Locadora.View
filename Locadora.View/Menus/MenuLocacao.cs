@@ -151,10 +151,11 @@ namespace Locadora.View.Menus
             try
             {
                 var list = controllerLocacaoFuncionario.ListarLocaoesFuncionarios();
-
+                Console.WriteLine("\n=-=-=   >  Locações  <   =-=-=\n");
                 foreach (var locacao in list)
                 {
                     Console.WriteLine(locacao);
+                    Console.WriteLine("------------------");
                 }
             }
             catch (Exception ex)
@@ -163,6 +164,53 @@ namespace Locadora.View.Menus
             }
         }
 
+        private void SelectAllServiceFuncionario(Funcionario funcionario)
+        {
+            Console.Clear();
+            Console.WriteLine();
+            LocacaoFuncionarioController controllerLocacaoFuncionario = new LocacaoFuncionarioController();
+            try
+            {
+                var list = controllerLocacaoFuncionario.ListarLocaoesFuncionarios();
+                Console.WriteLine("\n=-=-=   >  Locações  <   =-=-=\n");
+                foreach (var locacao in list)
+                {
+                    if (locacao.funcionarios.Any(f => f.FuncionarioID == funcionario.FuncionarioID))
+                    {
+                        Console.WriteLine(locacao);
+                        Console.WriteLine("---------------------------");
+
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void FindService()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            LocacaoFuncionarioController controllerLocacaoFuncionario = new LocacaoFuncionarioController();
+            try
+            {
+                Guid id = Validar.ValidarInputGuid("Informe o id para busca da locação: ");
+                if (id == Guid.Empty) return;
+                var funcionarioLocacao = controllerLocacaoFuncionario.BuscaLocacaoFuncionarioPorId(id);
+
+                    Console.WriteLine("\n=-=-=   >  Locação  <   =-=-=\n");  
+                    Console.WriteLine(funcionarioLocacao);
+                    Console.WriteLine("\n");
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         private void UpdateCancelLocacaoService()
         {
@@ -232,8 +280,8 @@ namespace Locadora.View.Menus
 
                 if(locacao.Status != "Ativa")
                 {
-                    Console.WriteLine($"\nStatus da locacao: {locacao.Status}");
-                    Console.WriteLine("\nSó é possível finalizar uma localização ativa. Operação cancelada!");
+                    Console.WriteLine($"\nStatus da locação: {locacao.Status}");
+                    Console.WriteLine("\nSó é possível finalizar uma locação ativa. Operação cancelada!");
                     return;
                 }
 
@@ -269,8 +317,8 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |                   >      Locação      <                   |");
                 Console.WriteLine(" |-----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Exibir Locações      |   [ 2 ] Finalizar Locação    |");
-                Console.WriteLine(" | [ 3 ] Cancelar Locação     |   [ 4 ] Voltar               |");
-                Console.WriteLine(" |                            |                              |");
+                Console.WriteLine(" | [ 3 ] Cancelar Locação     |   [ 4 ] Buscar Locação       |");
+                Console.WriteLine(" | [ 5 ] Voltar               |                              |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
                 Console.WriteLine();
                 Console.Write("  >>> Informe o menu desejado: ");
@@ -290,6 +338,9 @@ namespace Locadora.View.Menus
                         UpdateCancelLocacaoService();
                         break;
                     case 4:
+                        FindService();
+                        break;
+                    case 5:
                         return;
                     default:
                         Console.WriteLine("\nOpção Inválida. Tente novamente.");
@@ -312,7 +363,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
                 Console.WriteLine(" |                   >      Locaçao      <                   |");
                 Console.WriteLine(" |-----------------------------------------------------------|");
-                Console.WriteLine(" | [ 1 ] Realizar Locação     |   [ 2 ] Exibir Locações      |");
+                Console.WriteLine(" | [ 1 ] Realizar Locação     |   [ 2 ] Minhas Locações      |");
                 Console.WriteLine(" | [ 3 ] Finalizar Locação    |   [ 4 ] Cancelar Locação     |");
                 Console.WriteLine(" | [ 5 ] Voltar               |                              |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
@@ -328,7 +379,7 @@ namespace Locadora.View.Menus
                         InsertServiceFuncionario( funcionario);
                         break;
                     case 2:
-                        SelectAllService();
+                        SelectAllServiceFuncionario(funcionario);
                         break;
                     case 3:
                         UpdateLocacaoService();

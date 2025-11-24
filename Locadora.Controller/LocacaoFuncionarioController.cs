@@ -3,6 +3,7 @@ using Locadora.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,54 +42,51 @@ namespace Locadora.Controller
             }
         }
 
-        public LocacaoFuncionario BuscaLocacaoFuncionarioPorId(int id)
+        public LocacaoFuncionario BuscaLocacaoFuncionarioPorId(Guid id)
         {
-            var connection = new SqlConnection(ConnectionDB.GetConnectionString());
-            connection.Open();
-            LocacaoController controllerLocacao = new LocacaoController();
-            FuncionarioController controllerFuncionario= new FuncionarioController();
-            using (SqlCommand command = new SqlCommand(LocacaoFuncionario.SELECTLOCACAOFUNCIONARIOPORID, connection))
+            using (var connection = new SqlConnection(ConnectionDB.GetConnectionString()))
             {
-                try
+                connection.Open();
+
+                LocacaoController controllerLocacao = new LocacaoController();
+                FuncionarioController controllerFuncionario = new FuncionarioController();
+
+                using (SqlCommand command = new SqlCommand(LocacaoFuncionario.SELECTLOCACAOFUNCIONARIOPORID, connection))
                 {
-                    command.Parameters.AddWithValue("@LocacaoID", id);
-                    SqlDataReader reader = command.ExecuteReader();
-
-
-                    if (reader.Read())
+                    try
                     {
-                        Locacao locacao = controllerLocacao.BuscarLocacaoPorId(reader.GetGuid(1));
-                        
+                        command.Parameters.Add("@LocacaoID", SqlDbType.UniqueIdentifier).Value = id;
 
-                        var locacaoFuncionario = new LocacaoFuncionario(
-                            reader.GetInt32(0),
-                            locacao
-                        );
-                        while (reader.Read())
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            Funcionario funcionario = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
-                            locacaoFuncionario.addFuncionario(funcionario);
+                            if (!reader.Read())
+                                return null;
+
+                            var locacao = controllerLocacao.BuscarLocacaoPorId(reader.GetGuid(1));
+
+                            var locacaoFuncionario = new LocacaoFuncionario(
+                                reader.GetInt32(0),
+                                locacao
+                            );
+
+                            var funcionarioPrimeiro = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
+                            locacaoFuncionario.addFuncionario(funcionarioPrimeiro);
+
+                            while (reader.Read())
+                            {
+                                var funcionario = controllerFuncionario.BuscarFuncionarioPorId(reader.GetInt32(2));
+                                locacaoFuncionario.addFuncionario(funcionario);
+                            }
+
+                            return locacaoFuncionario;
                         }
-
-                        return locacaoFuncionario;
                     }
-
-                    
-                    throw new Exception($"Locacao com funcionario não encontrada");
-
-                }
-                catch (SqlException ex)
-                {
-
-                    throw new Exception($"Locacao com funcionario não encontrada " + ex.Message);
-                }
-                catch (Exception ex)
-                {
-
-                    throw new Exception($"Locacao com funcionario não encontrada " + ex.Message);
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Locação com funcionário não encontrada: {ex.Message}");
+                    }
                 }
             }
-
         }
 
         public List<LocacaoFuncionario> ListarLocaoesFuncionarios()

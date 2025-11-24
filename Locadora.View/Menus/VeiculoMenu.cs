@@ -46,6 +46,30 @@ namespace Locadora.View.Menus
             }
         }
 
+        private void FindService()
+        {
+            Console.Clear();
+            Console.WriteLine();
+
+            try
+            {
+                string? plate = Validar.ValidarInputString("Informe a placa para busca do veículo: ");
+                if (plate == null) return;
+                var veiculo = Controller.BuscarVeiculoPlaca(plate);
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("\n=-=-=   > Veículo  <   =-=-=\n");
+
+                Console.WriteLine(veiculo);
+                Console.WriteLine("--------------------------------");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         private void SelectAllService()
         {
@@ -55,10 +79,11 @@ namespace Locadora.View.Menus
             try
             {
                 var list = Controller.ListarTodosVeiculos();
-
+                Console.WriteLine("\n=-=-=   > Veículos  <   =-=-=\n");
                 foreach (var vehicle in list)
                 {
                     Console.WriteLine(vehicle);
+                    Console.WriteLine("------------------------------");
                 }
             }
             catch (Exception ex)
@@ -76,16 +101,17 @@ namespace Locadora.View.Menus
             {
                 int contador = 0;
                 var list = Controller.ListarTodosVeiculos();
-
+                Console.WriteLine("\n=-=-=   > Veículos Disponíveis  <   =-=-=\n");
                 foreach (var vehicle in list)
                 {
                     if (vehicle.StatusVeiculo == "Disponivel" || vehicle.StatusVeiculo == "Disponível")
                     {
                         Console.WriteLine(vehicle);
+                        Console.WriteLine("------------------------------------");
                         contador++;
                     }
                 }
-                if(contador == 0)
+                if (contador == 0)
                 {
                     Console.WriteLine("Não nehnum veículo dispnível no momento.");
                 }
@@ -105,12 +131,13 @@ namespace Locadora.View.Menus
             {
                 int contador = 0;
                 var list = Controller.ListarTodosVeiculos();
-
+                Console.WriteLine("\n=-=-=   > Veículos Alugados  <   =-=-=\n");
                 foreach (var vehicle in list)
                 {
                     if (vehicle.StatusVeiculo == "Alugado")
                     {
                         Console.WriteLine(vehicle);
+                        Console.WriteLine("----------------------------------");
                         contador++;
                     }
                 }
@@ -219,7 +246,8 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" | [ 1 ] Cadastrar Veículo   |   [ 2 ] Exibir Veículos Alugados     |");
                 Console.WriteLine(" | [ 3 ] Atualizar Status    |   [ 4 ] Exibir Veículos Disponíveis  |");
                 Console.WriteLine(" | [ 5 ] Exibir Categorias   |   [ 6 ] Exibir Todos os Veículos     |");
-                Console.WriteLine(" | [ 7 ] Deletar Veículo     |   [ 8 ] Voltar                       |");
+                Console.WriteLine(" | [ 7 ] Deletar Veículo     |   [ 8 ] Buscar veículo               |");
+                Console.WriteLine(" | [ 9 ] Voltar              |                                      |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=|");
                 Console.WriteLine();
                 Console.Write("  >>> Informe o menu desejado: ");
@@ -233,13 +261,13 @@ namespace Locadora.View.Menus
                         InsertService();
                         break;
                     case 2:
-                        SelectAlugadosService(); 
+                        SelectAlugadosService();
                         break;
                     case 3:
                         UpdateStatusService();
                         break;
                     case 4:
-                        SelectDisponivelService();  
+                        SelectDisponivelService();
                         break;
                     case 5:
                         listCategory.SelectAllService();
@@ -250,7 +278,11 @@ namespace Locadora.View.Menus
                     case 7:
                         DeleteService();
                         break;
+
                     case 8:
+                        FindService();
+                        break;
+                    case 9:
                         return;
                     default:
                         Console.WriteLine("\nOpção Inválida. Tente novamente.");

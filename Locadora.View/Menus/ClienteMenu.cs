@@ -57,10 +57,11 @@ namespace Locadora.View.Menus
             try
             {
                 var list = Controller.ListarClientes();
-
+                Console.WriteLine("\n=-=-=   >  Clientes  <   =-=-=\n");
                 foreach (var customer in list)
                 {
                     Console.WriteLine(customer);
+                    Console.WriteLine("------------------------------");
                 }
             }
             catch (Exception ex)
@@ -68,6 +69,30 @@ namespace Locadora.View.Menus
                 Console.WriteLine(ex.Message);
             }
         }
+
+        private void FindService()
+        {
+            Console.Clear();
+            Console.WriteLine();
+
+            try
+            {
+                string? email = Validar.ValidarInputString("Informe o email para busca do cliente: ");
+                if (email == null) return;
+
+                var cliente = Controller.BuscaClientePorEmail(email);
+                Console.WriteLine("\n=-=-=   >  Cliente  <   =-=-=\n");
+
+                Console.WriteLine(cliente);
+                Console.WriteLine("---------------------------------");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
 
         private void UpdatePhoneService()
@@ -199,7 +224,8 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |-----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Cliente    |   [ 2 ] Exibir Clientes      |");
                 Console.WriteLine(" | [ 3 ] Atualizar Telefone   |   [ 4 ] Atualizar Documento  |");
-                Console.WriteLine(" | [ 5 ] Deletar Cliente      |   [ 6 ] Voltar               |");
+                Console.WriteLine(" | [ 5 ] Deletar Cliente      |   [ 6 ] Buscar Cliente       |");
+                Console.WriteLine(" | [ 7 ] Voltar               |                              |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
                 Console.WriteLine();
                 Console.Write("  >>> Informe o menu desejado: ");
@@ -225,6 +251,9 @@ namespace Locadora.View.Menus
                         DeleteService();
                         break;
                     case 6:
+                        FindService();
+                        break;
+                    case 7:
                         return;
                     default:
                         Console.WriteLine("\nOpção Inválida. Tente novamente.");

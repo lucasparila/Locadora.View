@@ -36,6 +36,29 @@ namespace Locadora.View.Menus
         }
 
 
+        public void FindService()
+        {
+            
+            try
+            {
+                string? name = Validar.ValidarInputString("Informe o nome da categoria para busca: ");
+                if (name == null) return;
+                var category = Controller.BuscaCategoriaPorNome(name);
+
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("\n=-=-=   > Categoria <   =-=-=\n");
+
+                Console.WriteLine(category);
+                Console.WriteLine("---------------------------------");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public void SelectAllService()
         {
             Console.Clear();
@@ -44,10 +67,11 @@ namespace Locadora.View.Menus
             try
             {
                 var list = Controller.ListarCategorias();
-
+                Console.WriteLine("\n=-=-=   > Categorias de Veículos <   =-=-=\n");
                 foreach (var category in list)
                 {
                     Console.WriteLine(category);
+                    Console.WriteLine("------------------------------------------");
                 }
             }
             catch (Exception ex)
@@ -147,7 +171,7 @@ namespace Locadora.View.Menus
                 Console.WriteLine(" |----------------------------------------------------------|");
                 Console.WriteLine(" | [ 1 ] Cadastrar Categoria   |   [ 2 ] Exibir Categorias  |");
                 Console.WriteLine(" | [ 3 ] Atualizar Categoria   |   [ 4 ] Deletar Categoria  |");
-                Console.WriteLine(" | [ 5 ] Voltar                |                            |");
+                Console.WriteLine(" | [ 5 ] Buscar Categoria      |   [ 6 ] Voltar             |");
                 Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=|");
                 Console.WriteLine();
                 Console.Write("  >>> Informe o menu desejado: ");
@@ -170,6 +194,9 @@ namespace Locadora.View.Menus
                         DeleteService();
                         break;
                     case 5:
+                        FindService();
+                        break;
+                    case 6:
                         return;
                     default:
                         Console.WriteLine("\nOpção Inválida. Tente novamente.");

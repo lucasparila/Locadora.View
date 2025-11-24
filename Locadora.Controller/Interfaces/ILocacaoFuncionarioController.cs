@@ -12,6 +12,6 @@ namespace Locadora.Controller.Interfaces
 
         public void AdicionarLocacaoFuncionario(LocacaoFuncionario locacaoFuncionario, Funcionario funcionario);
         public List<LocacaoFuncionario> ListarLocaoesFuncionarios();
-        public LocacaoFuncionario BuscaLocacaoFuncionarioPorId(int id);
+        public LocacaoFuncionario BuscaLocacaoFuncionarioPorId(Guid id);
     }
 }
