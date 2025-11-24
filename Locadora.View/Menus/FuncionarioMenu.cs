@@ -168,7 +168,47 @@ namespace Locadora.View.Menus
         }
 
 
-        public void MenuFuncionario()
+        public void MenuFuncionarioFuncionario()
+        {
+            int opcao = 0;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
+                Console.WriteLine(" |                   >      Funcionário      <               |");
+                Console.WriteLine(" |-----------------------------------------------------------|");
+                Console.WriteLine(" | [ 1 ] Atualizar Senha      |   [ 2 ] Exibir Funcionarios  |");
+                Console.WriteLine(" | [ 3 ] Voltar               |                              |");
+                Console.WriteLine(" |                            |                              |");
+                Console.WriteLine(" |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|");
+                Console.WriteLine();
+                Console.Write("  >>> Informe o menu desejado: ");
+                string entrada = Console.ReadLine()!;
+                bool conversao = int.TryParse(entrada, out opcao);
+                Console.WriteLine("---------------------------------------");
+
+                switch (opcao)
+                {
+                    case 1:
+                        UpdatePasswordService();
+                        break;
+                    case 2:
+                        SelectAllService();
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        Console.WriteLine("\nOpção Inválida. Tente novamente.");
+                        break;
+                }
+
+                Console.Write("\n  >  Pressione qualquer Tecla para prosseguir ");
+                Console.ReadLine();
+
+            } while (true);
+        }
+
+        public void MenuFuncionarioAdministrador()
         {
             int opcao = 0;
             do

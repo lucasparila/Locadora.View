@@ -139,12 +139,12 @@ INSERT INTO tblLocacoes (ClienteID, VeiculoID, DataLocacao, DataDevolucaoPrevist
 -- LocaçãoFuncionarios (N:M)
 -- Ana e Pedro envolvidos na Locação 1
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
-('E1C7423E-F36B-1410-820C-00C896CF73F1', 1),
-('E1C7423E-F36B-1410-820C-00C896CF73F1', 2);
+('A3EB423E-F36B-1410-820E-00C896CF73F1', 1),
+('A3EB423E-F36B-1410-820E-00C896CF73F1', 2);
 
 -- Pedro envolvido na Locação 2
 INSERT INTO tblLocacaoFuncionarios (LocacaoID, FuncionarioID) VALUES
-('E5C7423E-F36B-1410-820C-00C896CF73F1', 2);
+('AAEB423E-F36B-1410-820E-00C896CF73F1', 2);
 
 
 select * from tblClientes;
@@ -152,9 +152,18 @@ select * from tblClientes;
 select * from tblFuncionarios;
 select * from tblLocacoes; 
 
+select * from tblVeiculos;
+
+select * from tblLocacaoFuncionarios;
+
+SELECT LocacaoFuncionarioID, LocacaoID, FuncionarioID FROM tblLocacaoFuncionarios;
+
 SELECT FuncionarioID, Senha, Nome, CPF, Email, Salario 
 FROM tblFuncionarios
 WHERE Email = 'ana.costa@locadora.com';
+
+SELECT * FROM tblLocacaoFuncionarios ORDER BY LocacaoID, FuncionarioID;
+
 --GO
 --CREATE OR ALTER PROCEDURE sp_INSERIRCATEGORIA
 --    @NomeCategoria VARCHAR(50),

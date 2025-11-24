@@ -99,7 +99,7 @@ void menuGeralAdministrador()
                 break;
             case "2":
                 FuncionarioMenu funcionarioMenu = new FuncionarioMenu();
-                funcionarioMenu.MenuFuncionario();
+                funcionarioMenu.MenuFuncionarioAdministrador();
                 break;
             case "3":
                 VeiculoMenu veiculoMenu = new VeiculoMenu();
@@ -154,7 +154,7 @@ void menuGeralFuncionario(Funcionario funcionario)
                 break;
             case "2":
                 FuncionarioMenu funcionarioMenu = new FuncionarioMenu();
-                funcionarioMenu.MenuFuncionario();
+                funcionarioMenu.MenuFuncionarioFuncionario();
                 break;
             case "3":
                 VeiculoMenu veiculoMenu = new VeiculoMenu();
